@@ -3,6 +3,10 @@
   justify-content: center;
   align-items: center;
   height: 66vh;
+
+  .image {
+    max-height: 100%;
+  }
 }
 
 .App {
@@ -12,6 +16,7 @@
 }
 
 .inputContainer {
+  height: 10.75rem;
   position: absolute;
   top: 66.666%;
   left: calc(50% - 25rem);
@@ -62,4 +67,19 @@
     }
     }
 
+}
+
+.colorResponseContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  button {
+    font-size: 1.3rem;
+    background-color: #F5540C;
+    color: #eeeeee;
+    padding: .2rem .5rem .2rem .5rem;
+    border-radius: 1rem;
+    margin-top: 1rem;
+  }
 }
