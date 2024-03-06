@@ -87,3 +87,18 @@
   }
 }
 
+.loading {
+  height: 10vh;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: #aaaaaa .5rem solid;
+  border-top: white .5rem solid;
+  animation-name: rotateLoading;
+  animation-duration: 1s;
+  animation-iteration-count: infinite;
+}
+
+@keyframes rotateLoading {
+  from {transform: rotate(0deg);}
+  to {transform: rotate(360deg);}
+}

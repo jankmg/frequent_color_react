@@ -5,16 +5,31 @@ import { getFrequentColorRequest } from './app/features/get_frequent_color/get_f
 import { AppDispatch, RootState } from './app/store';
 import ImageInputForm from './components/image_input_form';
 import ImageContainer from './components/image';
+import Loading from './components/loading/Loading';
 
 function App() {
   const dispatch = useDispatch<AppDispatch>();
   const [image, setImage] = useState<string>()
   const [isShowingColor, setIsShowingColor] = useState<boolean>(false)
   const [color, setColor] = useState<string>()
+  const [isLoading, setIsLoading] = useState<boolean>()
 
   const frequentColorData = useSelector((state: RootState)=>{
     return state.getFrequentColor.value
   })
+
+  const frequentColorStatus = useSelector((state: RootState)=>{
+    return state.getFrequentColor.status
+  })
+
+  useEffect(()=>{
+    if(frequentColorStatus == "loading"){
+      setIsLoading(true)
+      return
+    }
+
+    setIsLoading(false)
+  }, [frequentColorStatus])
 
   useEffect(()=>{
     if(image){
@@ -23,7 +38,6 @@ function App() {
   },[image])
 
   useEffect(()=>{
-    console.log(frequentColorData)
     if(frequentColorData){
       setColor(`rgb(${frequentColorData.data.rgb[0]}, ${frequentColorData.data.rgb[1]}, ${frequentColorData.data.rgb[2]})`)
     }
@@ -42,14 +56,16 @@ function App() {
 
   return (
     <div className='App' style={{background: color ? color : "#111122"}}>
-    {image && <ImageContainer image={image} />}
+      {!isLoading ? <>{image && <ImageContainer image={image} />}</> : null}
     <section className="inputContainer">
-      {!isShowingColor ? <ImageInputForm handleSubmit={handleSubmit}/> : <section className='colorResponseContainer'>
+      {isLoading ? <Loading/> : 
+      <>{!isShowingColor ? <ImageInputForm handleSubmit={handleSubmit}/> : <section className='colorResponseContainer'>
         <h1>The most common color in this image is:</h1>
         <span>{color}</span>
         <button onClick={()=> setIsShowingColor(false)}>Try another image</button>
       </section>
-      }
+      }</>
+    }
     </section>
     </div>
   );
