@@ -1,13 +1,23 @@
-import { AxiosError } from "axios";
+import { Axios, AxiosError } from "axios";
+
+export type Reset = ()=> void
 
 export interface GetFrequentColorInitialState {
-    value: ColorRequest | null,
+    value: ColorResponse | null,
     status: string,
     error: string | undefined
 }
 
 export interface ColorRequest {
     data: {
-        rgb: [number, number, number]
+        rgb?: [number, number, number],
+    }
+}
+
+export interface ColorResponse {
+    status: number;
+    data: {
+        rgb?: [number, number, number]
+        messagea?: string;
     }
 }

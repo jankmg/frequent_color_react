@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import {GetFrequentColorInitialState, ColorRequest} from "..'/../../interface"
-import axios, { AxiosResponse } from "axios";
+import {GetFrequentColorInitialState, ColorRequest, ColorResponse} from "..'/../../interface"
+import axios, { AxiosError, AxiosResponse } from "axios";
 
 const initialState: GetFrequentColorInitialState = {
     value: null,
@@ -10,13 +10,24 @@ const initialState: GetFrequentColorInitialState = {
 
 export const getFrequentColorRequest = createAsyncThunk("frequentColor/frequentColorDataStatus", async(image_url: string)=>{
     try {
-
         const frequentColorResponse: AxiosResponse<ColorRequest> = await axios.get<ColorRequest>(`https://api.jankmg.com/get_most_common_color?image_url=${image_url}`, {
         })
+
+        const frequentColorRes: ColorResponse = {
+            status: frequentColorResponse.status,
+            data: frequentColorResponse.data.data
+        }
         
-        return frequentColorResponse.data
-    } catch(error){
-        return error;
+        return frequentColorRes
+    } catch(error: unknown){
+        if(axios.isAxiosError(error)){
+            const responseError: ColorResponse = {
+                status: error.response?.status as number,
+                data: error.response?.data
+
+            }
+            return responseError;
+        }
     }
 })
 
@@ -29,7 +40,7 @@ export const getFrequentColor = createSlice({
             state.status = "loading";
         }).addCase(getFrequentColorRequest.fulfilled, (state, action)=>{
             state.status = "succeded";
-            state.value = action.payload as ColorRequest;
+            state.value = action.payload as ColorResponse;
         }).addCase(getFrequentColorRequest.rejected, (state, action)=>{
             state.status = "failed";
             state.error = action.error.message

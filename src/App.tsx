@@ -6,6 +6,9 @@ import { AppDispatch, RootState } from './app/store';
 import ImageInputForm from './components/image_input_form';
 import ImageContainer from './components/image';
 import Loading from './components/loading/Loading';
+import SuccessMessage from './components/success/success_message';
+import ErrorMessage from './components/error/error_message';
+import { ColorResponse } from '../interface';
 
 function App() {
   const dispatch = useDispatch<AppDispatch>();
@@ -13,6 +16,7 @@ function App() {
   const [isShowingColor, setIsShowingColor] = useState<boolean>(false)
   const [color, setColor] = useState<string>()
   const [isLoading, setIsLoading] = useState<boolean>()
+  const [isError, setIsError] = useState<boolean>(false)
 
   const frequentColorData = useSelector((state: RootState)=>{
     return state.getFrequentColor.value
@@ -22,8 +26,9 @@ function App() {
     return state.getFrequentColor.status
   })
 
+  //handles loading
   useEffect(()=>{
-    if(frequentColorStatus == "loading"){
+    if(frequentColorStatus === "loading"){
       setIsLoading(true)
       return
     }
@@ -31,21 +36,31 @@ function App() {
     setIsLoading(false)
   }, [frequentColorStatus])
 
+  //handles dispatching
   useEffect(()=>{
     if(image){
       dispatch(getFrequentColorRequest(image))
     }
   },[image])
 
+  //handles response
   useEffect(()=>{
-    if(frequentColorData){
-      setColor(`rgb(${frequentColorData.data.rgb[0]}, ${frequentColorData.data.rgb[1]}, ${frequentColorData.data.rgb[2]})`)
+    if(!frequentColorData){
+      // setIsError(true)
+      return
     }
+
+    if(frequentColorData.status !== 200  || !frequentColorData.data.rgb){
+      setIsError(true)
+      return
+    }
+    
+    setColor(`rgb(${frequentColorData.data?.rgb[0]}, ${frequentColorData.data?.rgb[1]}, ${frequentColorData.data?.rgb[2]})`)
+
   }, [frequentColorData])
 
-  // useEffect(()=>{
-  //   console.log(color)
-  // }, [color])
+  // console.log(color)
+
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>, imageURL: string): void =>{
     e.preventDefault()
@@ -54,17 +69,20 @@ function App() {
     setIsShowingColor(true)
   }
 
+  const reset = ()=>{
+    setIsShowingColor(false)
+    setIsError(false)
+    setImage("")
+    setColor("#111122")
+  }
+
   return (
     <div className='App' style={{background: color ? color : "#111122"}}>
-      {!isLoading ? <>{image && <ImageContainer image={image} />}</> : null}
+      {!isLoading ? <>{(image && !isError) && <ImageContainer image={image} />}</> : null}
     <section className="inputContainer">
       {isLoading ? <Loading/> : 
-      <>{!isShowingColor ? <ImageInputForm handleSubmit={handleSubmit}/> : <section className='colorResponseContainer'>
-        <h1>The most common color in this image is:</h1>
-        <span>{color}</span>
-        <button onClick={()=> setIsShowingColor(false)}>Try another image</button>
-      </section>
-      }</>
+      <>{isError ? <ErrorMessage reset={reset}/> : <>{!isShowingColor ? <ImageInputForm handleSubmit={handleSubmit}/> : <SuccessMessage color={color} reset={reset} />
+      }</>}</>
     }
     </section>
     </div>
