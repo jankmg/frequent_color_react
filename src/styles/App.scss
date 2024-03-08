@@ -5,7 +5,9 @@
   height: 66vh;
   
   .image {
-    max-height: 100%;
+    max-width: 75vw;
+    max-height: 75%;
+    object-fit: contain;
   }
 }
 
