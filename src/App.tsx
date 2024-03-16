@@ -3,18 +3,15 @@ import './styles/App.scss';
 import {useSelector, useDispatch} from "react-redux"
 import { getFrequentColorRequest } from './app/features/get_frequent_color/get_frequent_color';
 import { AppDispatch, RootState } from './app/store';
-import ImageInputForm from './components/image_input_form';
 import ImageContainer from './components/image';
 import Loading from './components/loading/Loading';
-import SuccessMessage from './components/success/success_message';
-import ErrorMessage from './components/error/error_message';
-import { ColorResponse } from '../interface';
+import AppContent from './components/app_content';
 
 function App() {
   const dispatch = useDispatch<AppDispatch>();
   const [image, setImage] = useState<string>()
   const [isShowingColor, setIsShowingColor] = useState<boolean>(false)
-  const [color, setColor] = useState<string>()
+  const [color, setColor] = useState<string>("")
   const [isLoading, setIsLoading] = useState<boolean>()
   const [isError, setIsError] = useState<boolean>(false)
 
@@ -81,8 +78,7 @@ function App() {
       {!isLoading ? <>{(image && !isError) && <ImageContainer image={image} />}</> : null}
     <section className="inputContainer">
       {isLoading ? <Loading/> : 
-      <>{isError ? <ErrorMessage reset={reset}/> : <>{!isShowingColor ? <ImageInputForm handleSubmit={handleSubmit}/> : <SuccessMessage color={color} reset={reset} />
-      }</>}</>
+      <AppContent handleSubmit={handleSubmit} color={color} reset={reset} isError={isError} isShowingColor={isShowingColor} />
     }
     </section>
     </div>

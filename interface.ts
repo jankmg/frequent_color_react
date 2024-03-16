@@ -1,6 +1,7 @@
 import { Axios, AxiosError } from "axios";
 
 export type Reset = ()=> void
+export type HandleSubmitFunction = (e: React.FormEvent<HTMLFormElement>, imageURL: string) => void;
 
 export interface GetFrequentColorInitialState {
     value: ColorResponse | null,

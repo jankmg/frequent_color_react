@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react"
+import { HandleSubmitFunction } from "../../interface"
 
-type HandleSubmitFunction = (e: React.FormEvent<HTMLFormElement>, imageURL: string) => void;
 
 
 const ImageInputForm = ({handleSubmit} : {handleSubmit: HandleSubmitFunction})=>{

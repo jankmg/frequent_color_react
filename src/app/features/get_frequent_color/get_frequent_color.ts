@@ -21,11 +21,19 @@ export const getFrequentColorRequest = createAsyncThunk("frequentColor/frequentC
         return frequentColorRes
     } catch(error: unknown){
         if(axios.isAxiosError(error)){
-            const responseError: ColorResponse = {
-                status: error.response?.status as number,
-                data: error.response?.data
-
+            let responseError: ColorResponse = {
+                status: 500,
+                data: {messagea: "Something went wrong"}
+                
             }
+
+            if(error.code === "ERR_NETWORK"){
+                return responseError;
+            }
+
+            responseError.status = error.response?.status as number
+            responseError.data = error.response?.data
+
             return responseError;
         }
     }
