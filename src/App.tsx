@@ -11,7 +11,7 @@ function App() {
   const dispatch = useDispatch<AppDispatch>();
   const [image, setImage] = useState<string>()
   const [isShowingColor, setIsShowingColor] = useState<boolean>(false)
-  const [color, setColor] = useState<string>("")
+  const [color, setColor] = useState<string>("#111122")
   const [isLoading, setIsLoading] = useState<boolean>()
   const [isError, setIsError] = useState<boolean>(false)
 
@@ -47,17 +47,14 @@ function App() {
       return
     }
 
-    if(frequentColorData.status !== 200  || !frequentColorData.data.rgb){
+    if(frequentColorData.status !== 200  || !frequentColorData.data.hsl){
       setIsError(true)
       return
     }
     
-    setColor(`rgb(${frequentColorData.data?.rgb[0]}, ${frequentColorData.data?.rgb[1]}, ${frequentColorData.data?.rgb[2]})`)
+    setColor(`hsl(${frequentColorData.data?.hsl[0]}, ${frequentColorData.data?.hsl[1]}%, ${frequentColorData.data?.hsl[2]}%)`)
 
   }, [frequentColorData])
-
-  // console.log(color)
-
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>, imageURL: string): void =>{
     e.preventDefault()
@@ -74,7 +71,7 @@ function App() {
   }
 
   return (
-    <div className='App' style={{background: color ? color : "#111122"}}>
+    <div className='App' style={{background: color}}>
       {!isLoading ? <>{(image && !isError) && <ImageContainer image={image} />}</> : null}
     <section className="inputContainer">
       {isLoading ? <Loading/> : 
