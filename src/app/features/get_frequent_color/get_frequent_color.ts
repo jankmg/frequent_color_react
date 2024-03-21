@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import {GetFrequentColorInitialState, ColorRequest, ColorResponse} from "..'/../../interface"
-import axios, { AxiosError, AxiosResponse } from "axios";
+import axios, { AxiosResponse } from "axios";
 
 const initialState: GetFrequentColorInitialState = {
     value: null,
