@@ -16,7 +16,7 @@ const ErrorMessage = ({reset}:{reset: Reset})=>{
 
     return <section className='colorResponseContainer'>
     <h1>{`Error ${error?.status}`}</h1>
-    <p>{error?.data.messagea}</p>
+    <p>{error?.data.message}</p>
     
     <button onClick={()=> reset()}>Try another image</button>
   </section>

@@ -11,7 +11,9 @@ function App() {
   const dispatch = useDispatch<AppDispatch>();
   const [image, setImage] = useState<string>()
   const [isShowingColor, setIsShowingColor] = useState<boolean>(false)
-  const [color, setColor] = useState<string>("#111122")
+  const [hslColor, setHslColor] = useState<string>("#111122")
+  const [rgbColor, setRgbColor] = useState<string>("#111122")
+  const [hexColor, setHexColor] = useState<string>("#111122")
   const [isLoading, setIsLoading] = useState<boolean>()
   const [isError, setIsError] = useState<boolean>(false)
 
@@ -47,12 +49,14 @@ function App() {
       return
     }
 
-    if(frequentColorData.status !== 200  || !frequentColorData.data.hsl){
+    if(frequentColorData.status !== 200  || !frequentColorData.data.hsl || !frequentColorData.data.rgb || !frequentColorData.data.hex){
       setIsError(true)
       return
     }
     
-    setColor(`hsl(${frequentColorData.data?.hsl[0]}, ${frequentColorData.data?.hsl[1]}%, ${frequentColorData.data?.hsl[2]}%)`)
+    setHslColor(`hsl(${frequentColorData.data?.hsl[0]}, ${frequentColorData.data?.hsl[1]}%, ${frequentColorData.data?.hsl[2]}%)`)
+    setRgbColor(`rgb(${frequentColorData.data?.rgb[0]}, ${frequentColorData.data?.rgb[1]}, ${frequentColorData.data?.rgb[2]})`)
+    setHexColor(frequentColorData.data.hex)
 
   }, [frequentColorData])
 
@@ -67,15 +71,15 @@ function App() {
     setIsShowingColor(false)
     setIsError(false)
     setImage("")
-    setColor("#111122")
+    setHslColor("#111122")
   }
 
   return (
-    <div className='App' style={{background: color}}>
+    <div className='App' style={{background: hslColor}}>
       {!isLoading ? <>{(image && !isError) && <ImageContainer image={image} />}</> : null}
     <section className="inputContainer">
       {isLoading ? <Loading/> : 
-      <AppContent handleSubmit={handleSubmit} color={color} reset={reset} isError={isError} isShowingColor={isShowingColor} />
+      <AppContent handleSubmit={handleSubmit} colors={{hslColor, rgbColor, hexColor}} reset={reset} isError={isError} isShowingColor={isShowingColor} />
     }
     </section>
     </div>
