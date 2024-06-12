@@ -10,14 +10,8 @@ const initialState: GetFrequentColorInitialState = {
 
 export const getFrequentColorRequest = createAsyncThunk("frequentColor/frequentColorDataStatus", async(image_url: string)=>{
     try {
-        // const frequentColorResponse: AxiosResponse<ColorRequest> = await axios.get<ColorRequest>(`https://api.jankmg.com/get_dominant_color?image_url=${image_url}`, {
-        // })
-
-        const frequentColorResponse: AxiosResponse<ColorRequest> = await axios.get<ColorRequest>(`http://localhost:8080/get_dominant_color?image_url=${image_url}`, {
+        const frequentColorResponse: AxiosResponse<ColorRequest> = await axios.get<ColorRequest>(`https://api.jankmg.com/get_dominant_color?image_url=${image_url}`, {
         })
-
-        // const frequentColorResponse: AxiosResponse<ColorRequest> = await axios.get<ColorRequest>(`https://jankmgdev.pythonanywhere.com/get_dominant_color?image_url=${image_url}`, {
-        // })
 
         const frequentColorRes: ColorResponse = {
             status: frequentColorResponse.status,
