@@ -16,14 +16,11 @@ export const getFrequentColorFileRequest = createAsyncThunk("frequentColor/frequ
         const formData = new FormData()
         formData.append("image", image_file[0])
 
-        const frequentColorResponse: AxiosResponse<ColorRequest> = await axios.post<ColorRequest>(`http://localhost:8080/get_dominant_color_from_file`, formData, {
+        const frequentColorResponse: AxiosResponse<ColorRequest> = await axios.post<ColorRequest>(`https://api.jankmg.com/get_dominant_color_from_file`, formData, {
             headers: {
                 "Content-Type": `multipart/form-data;`
             }
         })
-        
-        // const frequentColorResponse: AxiosResponse<ColorRequest> = await axios.get<ColorRequest>(`https://jankmgdev.pythonanywhere.com/get_dominant_color_from_file?image_url=${image_url}`, {
-        // })
 
         const frequentColorRes: ColorResponse = {
             status: frequentColorResponse.status,
