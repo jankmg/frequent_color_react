@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import './styles/App.scss';
+import { imageData } from '../interface';
 import {useSelector, useDispatch} from "react-redux"
 import { getFrequentColorRequest } from './app/features/get_frequent_color/get_frequent_color';
+import { getFrequentColorFileRequest } from './app/features/get_frequent_color/get_frequent_color_file';
 import { AppDispatch, RootState } from './app/store';
 import ImageContainer from './components/image';
 import Loading from './components/loading/Loading';
@@ -9,7 +11,8 @@ import AppContent from './components/app_content';
 
 function App() {
   const dispatch = useDispatch<AppDispatch>();
-  const [image, setImage] = useState<string>()
+  const [imageUrl, setImageUrl] = useState<string>()
+  const [imageFile, setImageFile] = useState<FileList | null>()
   const [isShowingColor, setIsShowingColor] = useState<boolean>(false)
   const [hslColor, setHslColor] = useState<string>("#111122")
   const [rgbColor, setRgbColor] = useState<string>("#111122")
@@ -37,10 +40,16 @@ function App() {
 
   //handles dispatching
   useEffect(()=>{
-    if(image){
-      dispatch(getFrequentColorRequest(image))
+    if(imageUrl && !imageFile){
+      dispatch(getFrequentColorRequest(imageUrl))
     }
-  },[image])
+  },[imageUrl, imageFile])
+
+  useEffect(()=>{
+    if(imageFile){
+      dispatch(getFrequentColorFileRequest(imageFile))
+    }
+  }, [imageFile])
 
   //handles response
   useEffect(()=>{
@@ -58,25 +67,36 @@ function App() {
     setRgbColor(`rgb(${frequentColorData.data?.rgb[0]}, ${frequentColorData.data?.rgb[1]}, ${frequentColorData.data?.rgb[2]})`)
     setHexColor(frequentColorData.data.hex)
 
+    if(imageFile){
+      setImageUrl(URL.createObjectURL(imageFile[0]))
+    }
+
   }, [frequentColorData])
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>, imageURL: string): void =>{
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>, imageData: imageData): void =>{
     e.preventDefault()
-    if(!imageURL) return
-    setImage(imageURL)
+
+    if(imageData.isFile){
+      setImageFile(imageData.imageFile)
+      setIsShowingColor(true)
+      return
+    }
+
+    
+    setImageUrl(imageData.imageUrl)
     setIsShowingColor(true)
   }
 
   const reset = ()=>{
     setIsShowingColor(false)
     setIsError(false)
-    setImage("")
+    setImageUrl("")
     setHslColor("#111122")
   }
 
   return (
     <div className='App' style={{background: hslColor}}>
-      {!isLoading ? <>{(image && !isError) && <ImageContainer image={image} />}</> : null}
+      {!isLoading ? <>{(imageUrl && !isError) && <ImageContainer image={imageUrl} />}</> : null}
     <section className="inputContainer">
       {isLoading ? <Loading/> : 
       <AppContent handleSubmit={handleSubmit} colors={{hslColor, rgbColor, hexColor}} reset={reset} isError={isError} isShowingColor={isShowingColor} />

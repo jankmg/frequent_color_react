@@ -1,3 +1,12 @@
+.App {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
 .imageContainer {
   display: flex;
   justify-content: center;
@@ -11,37 +20,50 @@
   }
 }
 
-.App {
-  height: 100vh;
-  width: 100vw;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-}
-
 .inputContainer {
-  height: 10.75rem;
+  color: #eeeeee;
+  background-color: #111122;
   width: 100%;
   display: flex;
-  flex-grow: 1;
   justify-content: center;
   align-items: center;
-  flex-direction: column;
-  background-color: #111122;
-  color: #eeeeee;
+  height: 100%;
 
   form {
     text-align: center;
 
     div {
-      height: 4.3rem;
       gap: .3rem;
       display: flex;
       flex-direction: column;
-      justify-content: center;
+      justify-content: space-evenly;
       align-items: center;
 
+      button, .form-button {
+        border-radius: 1rem;
+        border: none;
+        font-size: 1.3rem;
+        color: #eeeeee;
+        background-color: #ff3355;
+        cursor: pointer;
+      }
+
+      .form-url-buttons {
+        flex-direction: row;
+
+      }
+
+      input {
+        height: 2rem;
+      }
+
+      input[type=file]::file-selector-button {
+        background-color: #8888ff;
+        color: white;
+        padding: .5rem;
+        border: none;
+        border-radius: 1rem;
+      }
 
       .form-url-input {
         display: flex;
@@ -51,7 +73,6 @@
         border: none;
         max-width: 30rem;
         width: 100%;
-        height: 100%;
         padding: 0 0 0 1rem;
         font-size: 1rem;
         &:focus {
@@ -60,13 +81,7 @@
       }
   
       .form-button {
-        height: 100%;
-        border-radius: 1rem;
-        border: none;
-        font-size: 1.3rem;
-        color: #eeeeee;
         background-color: #F5540C;
-        cursor: pointer;
       }
     }
     }

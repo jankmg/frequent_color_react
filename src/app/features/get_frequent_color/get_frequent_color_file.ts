@@ -8,15 +8,21 @@ const initialState: GetFrequentColorInitialState = {
     error: undefined
 }
 
-export const getFrequentColorRequest = createAsyncThunk("frequentColor/frequentColorDataStatus", async(image_url: string)=>{
+export const getFrequentColorFileRequest = createAsyncThunk("frequentColor/frequentColorDataStatus", async(image_file: FileList)=>{
     try {
-        // const frequentColorResponse: AxiosResponse<ColorRequest> = await axios.get<ColorRequest>(`https://api.jankmg.com/get_dominant_color?image_url=${image_url}`, {
+        // const frequentColorResponse: AxiosResponse<ColorRequest> = await axios.get<ColorRequest>(`https://api.jankmg.com/get_dominant_color_from_file?image_url=${image_url}`, {
         // })
 
-        const frequentColorResponse: AxiosResponse<ColorRequest> = await axios.get<ColorRequest>(`http://localhost:8080/get_dominant_color?image_url=${image_url}`, {
-        })
+        const formData = new FormData()
+        formData.append("image", image_file[0])
 
-        // const frequentColorResponse: AxiosResponse<ColorRequest> = await axios.get<ColorRequest>(`https://jankmgdev.pythonanywhere.com/get_dominant_color?image_url=${image_url}`, {
+        const frequentColorResponse: AxiosResponse<ColorRequest> = await axios.post<ColorRequest>(`http://localhost:8080/get_dominant_color_from_file`, formData, {
+            headers: {
+                "Content-Type": `multipart/form-data;`
+            }
+        })
+        
+        // const frequentColorResponse: AxiosResponse<ColorRequest> = await axios.get<ColorRequest>(`https://jankmgdev.pythonanywhere.com/get_dominant_color_from_file?image_url=${image_url}`, {
         // })
 
         const frequentColorRes: ColorResponse = {
@@ -51,12 +57,12 @@ export const getFrequentColor = createSlice({
     initialState,
     reducers: {},
     extraReducers: (builder) =>{
-        builder.addCase(getFrequentColorRequest.pending, (state)=>{
+        builder.addCase(getFrequentColorFileRequest.pending, (state)=>{
             state.status = "loading";
-        }).addCase(getFrequentColorRequest.fulfilled, (state, action)=>{
+        }).addCase(getFrequentColorFileRequest.fulfilled, (state, action)=>{
             state.status = "succeded";
             state.value = action.payload as ColorResponse;
-        }).addCase(getFrequentColorRequest.rejected, (state, action)=>{
+        }).addCase(getFrequentColorFileRequest.rejected, (state, action)=>{
             state.status = "failed";
             state.error = action.error.message
         })

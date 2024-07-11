@@ -1,7 +1,7 @@
 import { Axios, AxiosError } from "axios";
 
 export type Reset = ()=> void
-export type HandleSubmitFunction = (e: React.FormEvent<HTMLFormElement>, imageURL: string) => void;
+export type HandleSubmitFunction = (e: React.FormEvent<HTMLFormElement>, imageData: imageData) => void;
 
 export interface ColorsType {
     rgbColor: string;
@@ -31,4 +31,10 @@ export interface ColorResponse {
         hex?: string;
         message?: string;
     }
+}
+
+export interface imageData {
+    isFile: boolean
+    imageUrl: string | undefined
+    imageFile: FileList | undefined | null
 }
